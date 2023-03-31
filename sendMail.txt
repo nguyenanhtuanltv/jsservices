@@ -1,0 +1,105 @@
+Hướng dẫn Dịch vụ 
+
+b1 Cài đặt gói: npm i nodemailer --s
+================================
+b2 Tạo tập tin sendMail.js
+
+const nodemailer = require("nodemailer");
+
+class XL_GOI_THU_DIEN_TU {
+    Goi_Thu_Lien_he(from, to, subject, body) {
+        let transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: '', // User gmail 
+                pass: '' // Pwd gmail
+            }
+        });
+
+        let mailOptions = {
+            from: `Nhà hàng Thu Trân <${from}>`,
+            to: to,
+            subject: subject,
+            html: body
+        };
+        // Gọi phương thức sendMail -> trả về dạng promise
+        return transporter.sendMail(mailOptions)
+    }
+
+}
+
+var Goi_thu = new XL_GOI_THU_DIEN_TU()
+module.exports = Goi_thu
+
+========================================================
+
+b3 // Xử lý SendMail => dich_vu.js
+const sendMail=require("./sendMail");
+
+
+
+else if(url == "/Lienhe"){
+            req.on("end",function(){
+                let thongTin=JSON.parse(Noi_dung_Nhan);
+                let Ket_qua = { "Noi_dung": true };
+                let from=`ltv.javascript@gmail.com`;
+                let to=`ltv.javascript@gmail.com`;
+                let subject=thongTin.tieude;
+                let body=thongTin.noidung
+                sendMail.Goi_Thu_Lien_he(from,to,subject,body).then(result=>{
+                    console.log(result)
+                    res.end(JSON.stringify(Ket_qua));
+                }).catch(err=>{
+                    console.log(err);
+                    Ket_qua.Noi_dung=false;
+                    res.end(JSON.stringify(Ket_qua));
+                })
+            })
+        }
+
+Hướng dẫn Khách hàng
+
+Trong api.js
+
+const apiLienhe=(thongTin)=>{
+    return new Promise((Ket_qua, Loi) => {
+        let Du_lieu = {}
+        let Xu_ly_HTTP = new XMLHttpRequest()
+        Xu_ly_HTTP.onload = () => {
+            var Chuoi_JSON = Xu_ly_HTTP.responseText
+            Du_lieu = JSON.parse(Chuoi_JSON)
+            Ket_qua(Du_lieu)
+        }
+        let Tham_so = `Lienhe`
+        let Dia_chi_Xu_ly = `${Dia_chi_Dich_vu}/${Tham_so}`
+        Xu_ly_HTTP.open("POST", Dia_chi_Xu_ly)
+        Xu_ly_HTTP.send(JSON.stringify(thongTin))
+    })
+}
+
+Trong contact.html
+
+document.querySelector("#Th_Dong_y").onclick=()=>{
+            let noidung = CKEDITOR.instances.Th_Noi_dung.getData();
+            let subject= document.querySelector("#Th_Tieu_de").value;
+            let hoten=document.querySelector("#Th_Ho_ten").value;
+            let email=document.querySelector("#Th_Email").value;
+            
+            let html=`<h4>Họ tên: ${hoten}</h4>Email: ${email}<br /><p><b>Nội dung</b></p>`;
+            html+=`${noidung}`
+            
+            let thongTin={
+                tieude:subject,
+                noidung:html
+            }
+            // Gọi API
+            apiLienhe(thongTin).then(result=>{
+                alert(`Cám ơn bạn. Chúng tôi sẽ trả lời sớm nhất cho bạn`)
+                console.log(result)
+                window.location='.'
+            })
+        }
+
+
+
+
