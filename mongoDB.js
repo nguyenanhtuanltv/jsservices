@@ -4,7 +4,7 @@ const MongoClient = mong_db.MongoClient;
 //const uri=`mongodb+srv://trongnhan:admin@twitter-project.9z0uqrh.mongodb.net/?retryWrites=true&w=majority`
 //const dbName = "js281";
 const dbName = "javascriptDB";
-const uri=`mongodb://mongodb.csc.edu.vn:27027`
+const uri=`mongodb://natuan:natuan2023@mongodb.csc.edu.vn:27027`
 class mongoDB{
     getAll(collection_name,filter={}){
         return MongoClient.connect(uri).then(client => {

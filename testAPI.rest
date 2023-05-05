@@ -2,7 +2,7 @@ GET http://localhost:8080/dsTivi?Ma_so=TIVI_1
 ###
 GET http://localhost:8080/dsDienthoai
 ###
-GET http://localhost:8080/TIVI_1.png
+GET https://jsservices.onrender.com/TIVI_1.png
 ###
 POST http://localhost:8080/ThemNguoidung
 Content-Type: application/json
